@@ -26,11 +26,57 @@ if (addBtnEl) {
       }
   });
 }
-/*
-window.onload = loadCourses;
 
-function loadCourses(): 
-function displayCourses();
+// laddar in kurserna som sparats
+window.onload = loadCourses;
+function loadCourses(): void {
+  let coursesData: string | null = localStorage.getItem(courseKey);
+  if (coursesData) { 
+    let courses: any[] = JSON.parse(coursesData);
+    displayCourses(courses);
+  }
+}
+
+
+function displayCourses(data: any[]): void {
+  if (courseList) {
+    courseList.innerHTML = "";
+    console.table(data);
+    for (let i = 0; i < data.length; i++) {
+      courseList.innerHTML += `
+      <div id="course${data[i].id}">
+          <p contenteditable="true" oninput="toggleButton(${data[i].id}, 'name')">${data[i]['name']}</p>
+          <p contenteditable="true" oninput="toggleButton(${data[i].id}, 'code')">${data[i]['code']}</p>
+          <p contenteditable="true" oninput="toggleButton(${data[i].id}, 'progression')">${data[i]['progression']}</p>
+          <p><a href="${data[i]['syllabus']}" target="_blank">Låtsaskursplan</a></p> <!-- Display syllabus URL as link -->
+          <button onclick="deleteCourse(${data[i].id})">Radera</button>
+          <button id="btn${data[i].id}" onclick="saveChanges(${data[i].id})" disabled>Spara</button>
+      </div>`;
+    }
+  }
+}
+
+function addCourse(name: string, code: string, progression: string): void {
+  // en liten fejk-kursplan
+  const fakeSyllabusUrl: string = "https://example.com/syllabus";
+
+  const coursesData: string | null = localStorage.getItem(courseKey);
+  let courses: any[] = [];
+  if (coursesData) {
+      courses = JSON.parse(coursesData);
+  }
+  const existingCourse = courses.find(course => course.code === code);
+  if (existingCourse) {
+      alert("Kurskoden är redan sparad. Använd en annan kurskod.");
+      return; // LÄGG EJ TILL EN KURSKOD SOM REDAN EXISTERAR
+  }
+  const id: number = courses.length > 0 ? courses[courses.length - 1].id + 1 : 1;
+  const newCourse = { id, name, code, progression, syllabus: fakeSyllabusUrl };
+  courses.push(newCourse);
+  localStorage.setItem(courseKey, JSON.stringify(courses));
+  loadCourses();
+}
+/*
 function saveChanges();
 function addCourse();
 */
