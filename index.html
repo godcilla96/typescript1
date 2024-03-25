@@ -4,16 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DT208G, laboration 1</title>
-    <!----
-    <script src="script.js" defer></script>
-    ---->
+
+    <script src="script.ts" defer></script>
     <link rel="stylesheet" href="style.scss">
 </head>
 <body>
     <h1>DT208G, laboration 1</h1>
-    <div id="outputDiv"></div>
-    <label for="inputField">Skriv något:</label>
-    <input type="text" id="inputField" placeholder="...">
-    <button id="submitButton">Visa</button>
+    <label for="coursename">Lägg till kurs:</label>
+    <input type="text" id="coursename" placeholder="..." required>
+
+    <label for ="coursecode">Kurskod:</label>
+    <input type="text" id="coursecode" placeholder="..." required>
+
+    <label for ="progression">Progression:</label>
+    <select id ="progression" required>
+        <option value = "A">A</option>
+        <option value = "B">B</option>
+        <option value="C">C</option>
+    </select>
+
+    <button id="addBtn">Lägg till</button>
+    <div class = "courses">
+
+    </div>
 </body>
 </html>
