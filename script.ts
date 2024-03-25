@@ -26,3 +26,11 @@ if (addBtnEl) {
       }
   });
 }
+/*
+window.onload = loadCourses;
+
+function loadCourses(): 
+function displayCourses();
+function saveChanges();
+function addCourse();
+*/
