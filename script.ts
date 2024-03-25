@@ -21,7 +21,8 @@ if (addBtnEl) {
           if (name && code && progression) {
               addCourse(name, code, progression);
           } else {
-              console.error("Please fill in all fields.");
+            // det går ej lägga till en kurs om inte alla fält är ifyllda
+              console.error("Fyll i alla fält");
           }
       }
   });
@@ -120,7 +121,16 @@ function saveChanges(id: number): void {
   }
 }
 
-/*
-
-function addCourse();
-*/
+// ta bort kurs från localstorage
+function deleteCourse(id: number): void {
+  const confirmDelete = confirm("Är du säker på att du vill radera denna kurs?");
+  if (confirmDelete) {
+      let coursesData: string | null = localStorage.getItem(courseKey);
+      if (coursesData) {
+          let courses: any[] = JSON.parse(coursesData);
+          courses = courses.filter(course => course.id !== id);
+          localStorage.setItem(courseKey, JSON.stringify(courses));
+          loadCourses();
+      }
+  }
+}
