@@ -61,7 +61,7 @@ function displayCourses(data: Course[]): void {
           <p contenteditable="true" oninput="toggleButton(${data[i].id}, 'progression')">${data[i]['progression']}</p>
           <p><a href="${data[i]['syllabus']}" target="_blank">Låtsaskursplan</a></p> 
           <button class="deleteBtn" data-id="${data[i].id}">Radera</button>
-          <button id="btn${data[i].id}" onclick="saveChanges(${data[i].id})" disabled>Spara</button>
+          <button id="btn${data[i].id}" onclick="saveChanges(event, ${data[i].id})" disabled>Spara</button>
       </div>`;
     }
     let deleteButtons = document.querySelectorAll('.deleteBtn');
@@ -118,8 +118,9 @@ function toggleButton(id: number): void {
   }
 }
 
-function saveChanges(id: number): void {
-  const nameEl: HTMLElement | null = document.querySelector("#course" + id + " p:first-child");
+function saveChanges(event: Event, id: number): void {
+  event.preventDefault();
+  const nameEl: HTMLElement | null = document.querySelector("#course" + id + " h3");
   const codeEl: HTMLElement | null = document.querySelector("#course" + id + " p:nth-child(2)");
   const progEl: HTMLElement | null = document.querySelector("#course" + id + " p:nth-child(3)");
 

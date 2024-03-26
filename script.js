@@ -42,7 +42,7 @@ function displayCourses(data) {
     if (courseList) {
         courseList.innerHTML = "";
         for (var i = 0; i < data.length; i++) {
-            courseList.innerHTML += "\n      <div id=\"course".concat(data[i].id, "\">\n          <h3 contenteditable=\"true\" oninput=\"toggleButton(").concat(data[i].id, ", 'name')\">").concat(data[i]['name'], "</h3>\n          <p contenteditable=\"true\" oninput=\"toggleButton(").concat(data[i].id, ", 'code')\">").concat(data[i]['code'], "</p>\n          <p contenteditable=\"true\" oninput=\"toggleButton(").concat(data[i].id, ", 'progression')\">").concat(data[i]['progression'], "</p>\n          <p><a href=\"").concat(data[i]['syllabus'], "\" target=\"_blank\">L\u00E5tsaskursplan</a></p> \n          <button class=\"deleteBtn\" data-id=\"").concat(data[i].id, "\">Radera</button>\n          <button id=\"btn").concat(data[i].id, "\" onclick=\"saveChanges(").concat(data[i].id, ")\" disabled>Spara</button>\n      </div>");
+            courseList.innerHTML += "\n      <div id=\"course".concat(data[i].id, "\">\n          <h3 contenteditable=\"true\" oninput=\"toggleButton(").concat(data[i].id, ", 'name')\">").concat(data[i]['name'], "</h3>\n          <p contenteditable=\"true\" oninput=\"toggleButton(").concat(data[i].id, ", 'code')\">").concat(data[i]['code'], "</p>\n          <p contenteditable=\"true\" oninput=\"toggleButton(").concat(data[i].id, ", 'progression')\">").concat(data[i]['progression'], "</p>\n          <p><a href=\"").concat(data[i]['syllabus'], "\" target=\"_blank\">L\u00E5tsaskursplan</a></p> \n          <button class=\"deleteBtn\" data-id=\"").concat(data[i].id, "\">Radera</button>\n          <button id=\"btn").concat(data[i].id, "\" onclick=\"saveChanges(event, ").concat(data[i].id, ")\" disabled>Spara</button>\n      </div>");
         }
         var deleteButtons = document.querySelectorAll('.deleteBtn');
         deleteButtons.forEach(function (button) {
@@ -92,8 +92,9 @@ function toggleButton(id) {
         buttonEl.removeAttribute("disabled");
     }
 }
-function saveChanges(id) {
-    var nameEl = document.querySelector("#course" + id + " p:first-child");
+function saveChanges(event, id) {
+    event.preventDefault();
+    var nameEl = document.querySelector("#course" + id + " h3");
     var codeEl = document.querySelector("#course" + id + " p:nth-child(2)");
     var progEl = document.querySelector("#course" + id + " p:nth-child(3)");
     if (nameEl && codeEl && progEl) {
