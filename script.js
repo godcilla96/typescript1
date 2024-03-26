@@ -85,13 +85,12 @@ function addCourse(name, code, progression) {
 function isValidProgression(progression) {
     return progression === "A" || progression === "B" || progression === "C";
 }
-// knappen för att spara
-function toggleButton(id) {
+window.toggleButton = function (id, fieldName) {
     var buttonEl = document.getElementById("btn" + id);
     if (buttonEl) {
         buttonEl.removeAttribute("disabled");
     }
-}
+};
 function saveChanges(event, id) {
     event.preventDefault();
     var nameEl = document.querySelector("#course" + id + " h3");
