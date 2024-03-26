@@ -50,6 +50,54 @@ function loadCourses(): void {
 }
 
 
+function saveChanges(event: Event, id: number): void {
+  event.preventDefault();
+  const nameEl: HTMLElement | null = document.querySelector("#course" + id + " h3");
+  const codeEl: HTMLElement | null = document.querySelector("#course" + id + " p:nth-child(2)");
+  const progEl: HTMLElement | null = document.querySelector("#course" + id + " p:nth-child(3)");
+
+  if (nameEl && codeEl && progEl) {
+    const name: string = nameEl.textContent || '';
+    const code: string = codeEl.textContent || '';
+    const progression: string = progEl.textContent || '';
+
+      // sparar endast om progressionen uppfyller kraven
+      if (!isValidProgression(progression)) {
+        alert("Ogiltig progression. Progressionen måste vara 'A', 'B', eller 'C'.");
+        window.location.reload();
+        return;
+    }
+
+    const coursesData: string | null = localStorage.getItem(courseKey);
+    if (coursesData) {
+        const courses: Course[] = JSON.parse(coursesData);
+        // kollar så att kurskoden är unik vid ändring av data
+        const codeExists = courses.some(course => course.code === code && course.id !== id);
+        if (codeExists) {
+            alert("Kurskoden är redan sparad. Använd en annan kurskod.");
+            window.location.reload();
+            return;
+        }
+
+        let index: number = -1;
+        for (let i = 0; i < courses.length; i++) {
+            if (courses[i].id === id) {
+                index = i;
+                break;
+            }
+        }
+        if (index !== -1) {
+            courses[index].name = name;
+            courses[index].code = code;
+            courses[index].progression = progression;
+            localStorage.setItem(courseKey, JSON.stringify(courses));
+            loadCourses();
+        }
+    }
+  }
+}
+
+
 function displayCourses(data: Course[]): void {
   if (courseList) {
     courseList.innerHTML = "";
@@ -117,53 +165,6 @@ function isValidProgression(progression: string): boolean {
       buttonEl.removeAttribute("disabled");
   }
 };
-
-function saveChanges(event: Event, id: number): void {
-  event.preventDefault();
-  const nameEl: HTMLElement | null = document.querySelector("#course" + id + " h3");
-  const codeEl: HTMLElement | null = document.querySelector("#course" + id + " p:nth-child(2)");
-  const progEl: HTMLElement | null = document.querySelector("#course" + id + " p:nth-child(3)");
-
-  if (nameEl && codeEl && progEl) {
-    const name: string = nameEl.textContent || '';
-    const code: string = codeEl.textContent || '';
-    const progression: string = progEl.textContent || '';
-
-      // sparar endast om progressionen uppfyller kraven
-      if (!isValidProgression(progression)) {
-        alert("Ogiltig progression. Progressionen måste vara 'A', 'B', eller 'C'.");
-        window.location.reload();
-        return;
-    }
-
-    const coursesData: string | null = localStorage.getItem(courseKey);
-    if (coursesData) {
-        const courses: Course[] = JSON.parse(coursesData);
-        // kollar så att kurskoden är unik vid ändring av data
-        const codeExists = courses.some(course => course.code === code && course.id !== id);
-        if (codeExists) {
-            alert("Kurskoden är redan sparad. Använd en annan kurskod.");
-            window.location.reload();
-            return;
-        }
-
-        let index: number = -1;
-        for (let i = 0; i < courses.length; i++) {
-            if (courses[i].id === id) {
-                index = i;
-                break;
-            }
-        }
-        if (index !== -1) {
-            courses[index].name = name;
-            courses[index].code = code;
-            courses[index].progression = progression;
-            localStorage.setItem(courseKey, JSON.stringify(courses));
-            loadCourses();
-        }
-    }
-  }
-}
 
 // ta bort kurs från localstorage
 function deleteCourse(id: number): void {

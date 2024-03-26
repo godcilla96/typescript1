@@ -38,6 +38,48 @@ function loadCourses() {
         displayCourses(courses_1);
     }
 }
+function saveChanges(event, id) {
+    event.preventDefault();
+    var nameEl = document.querySelector("#course" + id + " h3");
+    var codeEl = document.querySelector("#course" + id + " p:nth-child(2)");
+    var progEl = document.querySelector("#course" + id + " p:nth-child(3)");
+    if (nameEl && codeEl && progEl) {
+        var name_2 = nameEl.textContent || '';
+        var code_1 = codeEl.textContent || '';
+        var progression = progEl.textContent || '';
+        // sparar endast om progressionen uppfyller kraven
+        if (!isValidProgression(progression)) {
+            alert("Ogiltig progression. Progressionen måste vara 'A', 'B', eller 'C'.");
+            window.location.reload();
+            return;
+        }
+        var coursesData_1 = localStorage.getItem(courseKey);
+        if (coursesData_1) {
+            var courses_2 = JSON.parse(coursesData_1);
+            // kollar så att kurskoden är unik vid ändring av data
+            var codeExists = courses_2.some(function (course) { return course.code === code_1 && course.id !== id; });
+            if (codeExists) {
+                alert("Kurskoden är redan sparad. Använd en annan kurskod.");
+                window.location.reload();
+                return;
+            }
+            var index = -1;
+            for (var i = 0; i < courses_2.length; i++) {
+                if (courses_2[i].id === id) {
+                    index = i;
+                    break;
+                }
+            }
+            if (index !== -1) {
+                courses_2[index].name = name_2;
+                courses_2[index].code = code_1;
+                courses_2[index].progression = progression;
+                localStorage.setItem(courseKey, JSON.stringify(courses_2));
+                loadCourses();
+            }
+        }
+    }
+}
 function displayCourses(data) {
     if (courseList) {
         courseList.innerHTML = "";
@@ -92,48 +134,6 @@ window.toggleButton = function (id, fieldName) {
         buttonEl.removeAttribute("disabled");
     }
 };
-function saveChanges(event, id) {
-    event.preventDefault();
-    var nameEl = document.querySelector("#course" + id + " h3");
-    var codeEl = document.querySelector("#course" + id + " p:nth-child(2)");
-    var progEl = document.querySelector("#course" + id + " p:nth-child(3)");
-    if (nameEl && codeEl && progEl) {
-        var name_2 = nameEl.textContent || '';
-        var code_1 = codeEl.textContent || '';
-        var progression = progEl.textContent || '';
-        // sparar endast om progressionen uppfyller kraven
-        if (!isValidProgression(progression)) {
-            alert("Ogiltig progression. Progressionen måste vara 'A', 'B', eller 'C'.");
-            window.location.reload();
-            return;
-        }
-        var coursesData_1 = localStorage.getItem(courseKey);
-        if (coursesData_1) {
-            var courses_2 = JSON.parse(coursesData_1);
-            // kollar så att kurskoden är unik vid ändring av data
-            var codeExists = courses_2.some(function (course) { return course.code === code_1 && course.id !== id; });
-            if (codeExists) {
-                alert("Kurskoden är redan sparad. Använd en annan kurskod.");
-                window.location.reload();
-                return;
-            }
-            var index = -1;
-            for (var i = 0; i < courses_2.length; i++) {
-                if (courses_2[i].id === id) {
-                    index = i;
-                    break;
-                }
-            }
-            if (index !== -1) {
-                courses_2[index].name = name_2;
-                courses_2[index].code = code_1;
-                courses_2[index].progression = progression;
-                localStorage.setItem(courseKey, JSON.stringify(courses_2));
-                loadCourses();
-            }
-        }
-    }
-}
 // ta bort kurs från localstorage
 function deleteCourse(id) {
     var confirmDelete = confirm("Är du säker på att du vill radera denna kurs?");
