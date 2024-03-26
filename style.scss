@@ -1,5 +1,5 @@
 body {
-    background: linear-gradient(rgb(0, 0, 99), white);
+    background: linear-gradient(rgb(54, 54, 87), white);
     font-family: Arial, Helvetica, sans-serif;
     background-attachment: fixed;
 }
@@ -8,6 +8,7 @@ h1,
 h2 {
     color: white;
 }
+
 
 @media only screen and (max-width: 800px) {
     #coursename,
@@ -20,11 +21,30 @@ h2 {
     }
 }
 
-@media only screen and (min-width: 801px) {
+@media only screen and (min-width: 801px) and (max-width: 1299px) {
+    body {
+        margin-left: 150px;
+        margin-right: 150px;
+    }
     #coursename,
     #coursecode,
     #progression {
-        width:50%;
+        width:99%;
+        display: block;
+        height: 30px;
+        font-size: 1.5em;
+    }
+}
+
+@media only screen and (min-width: 1300px) {
+    body {
+        margin-left: 300px;
+        margin-right: 300px;
+    }
+    #coursename,
+    #coursecode,
+    #progression {
+        width: 99%;
         display: block;
         height: 30px;
         font-size: 1.5em;
@@ -50,11 +70,76 @@ input, select {
 }
 
 #addBtn {
-    background-color: rgb(172, 223, 172);
+    background-color: rgb(119, 213, 119);  
     width: 150px;
     height: 50px;
+    &:hover {
+        background-color: rgb(155, 202, 155);
+        cursor: pointer;
+    }
 }
 
+
 button {
-    font-family: 'Courier New', Courier, monospace;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 1.3em;
+}
+
+
+
+
+// stil för datan som lagras
+.courses div {
+    background-color: #f2f2f2;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.courses div {
+ p {
+    margin: 5px 0;
+    font-size: 1.3em;
+}
+h3 {
+    font-size: 1.5em;
+}
+}
+
+.courses div a {
+    color: blue;
+    text-decoration: none;
+    margin-right: 10px;
+}
+
+.courses div .deleteBtn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    margin-top: 5px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.courses div button {
+    background-color: rgb(164, 131, 22);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    margin-top: 5px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.courses div .deleteBtn:hover {
+    background-color: #c82333;
+}.courses div button:hover {
+    background-color:rgb(111, 89, 16);
+}
+
+.courses div button:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
 }

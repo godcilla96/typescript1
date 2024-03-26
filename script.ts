@@ -55,7 +55,7 @@ function displayCourses(data: Course[]): void {
     for (let i = 0; i < data.length; i++) {
       courseList.innerHTML += `
       <div id="course${data[i].id}">
-          <p contenteditable="true" oninput="toggleButton(${data[i].id}, 'name')">${data[i]['name']}</p>
+          <h3 contenteditable="true" oninput="toggleButton(${data[i].id}, 'name')">${data[i]['name']}</h3>
           <p contenteditable="true" oninput="toggleButton(${data[i].id}, 'code')">${data[i]['code']}</p>
           <p contenteditable="true" oninput="toggleButton(${data[i].id}, 'progression')">${data[i]['progression']}</p>
           <p><a href="${data[i]['syllabus']}" target="_blank">Låtsaskursplan</a></p> 
@@ -137,6 +137,14 @@ function saveChanges(id: number): void {
     const coursesData: string | null = localStorage.getItem(courseKey);
     if (coursesData) {
         const courses: Course[] = JSON.parse(coursesData);
+        // kollar så att kurskoden är unik vid ändring av data
+        const codeExists = courses.some(course => course.code === code && course.id !== id);
+        if (codeExists) {
+            alert("Kurskoden är redan sparad. Använd en annan kurskod.");
+            window.location.reload();
+            return;
+        }
+
         let index: number = -1;
         for (let i = 0; i < courses.length; i++) {
             if (courses[i].id === id) {
