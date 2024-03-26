@@ -3,7 +3,7 @@ interface Course {
   id: number;
   name: string;
   code: string;
-  progression: string;
+  progression: string;  
 }
 
 // lite variabler
@@ -19,6 +19,7 @@ let codeEl: HTMLInputElement | null = document.getElementById("coursecode") as H
 let progEl: HTMLSelectElement | null = document.getElementById("progression") as HTMLSelectElement;
 let courseList: HTMLElement | null = document.querySelector(".courses");
 
+// lägg till kurs
 if (addBtnEl) {
   addBtnEl.addEventListener("click", function (event: MouseEvent) {
       event.preventDefault();
@@ -37,7 +38,7 @@ if (addBtnEl) {
   });
 }
 
-// laddar in kurserna som sparats genom localStorage
+// laddar in kurserna som sparats i localStorage
 window.onload = loadCourses;
 
 function loadCourses(): void {
@@ -110,7 +111,7 @@ function isValidProgression(progression: string): boolean {
 }
 
 // knappen för att spara
-function toggleButton(id: number, field: string): void {
+function toggleButton(id: number): void {
   const buttonEl: HTMLButtonElement | null = document.getElementById("btn" + id) as HTMLButtonElement;
   if (buttonEl) {
       buttonEl.removeAttribute("disabled");
@@ -123,9 +124,9 @@ function saveChanges(id: number): void {
   const progEl: HTMLElement | null = document.querySelector("#course" + id + " p:nth-child(3)");
 
   if (nameEl && codeEl && progEl) {
-      const name: string = nameEl.innerHTML;
-      const code: string = codeEl.innerHTML;
-      const progression: string = progEl.innerHTML;
+    const name: string = nameEl.textContent || '';
+    const code: string = codeEl.textContent || '';
+    const progression: string = progEl.textContent || '';
 
       // sparar endast om progressionen uppfyller kraven
       if (!isValidProgression(progression)) {

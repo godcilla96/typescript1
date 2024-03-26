@@ -10,6 +10,7 @@ var nameEl = document.getElementById("coursename");
 var codeEl = document.getElementById("coursecode");
 var progEl = document.getElementById("progression");
 var courseList = document.querySelector(".courses");
+// lägg till kurs
 if (addBtnEl) {
     addBtnEl.addEventListener("click", function (event) {
         event.preventDefault();
@@ -28,7 +29,7 @@ if (addBtnEl) {
         }
     });
 }
-// laddar in kurserna som sparats genom localStorage
+// laddar in kurserna som sparats i localStorage
 window.onload = loadCourses;
 function loadCourses() {
     var coursesData = localStorage.getItem(courseKey);
@@ -85,7 +86,7 @@ function isValidProgression(progression) {
     return progression === "A" || progression === "B" || progression === "C";
 }
 // knappen för att spara
-function toggleButton(id, field) {
+function toggleButton(id) {
     var buttonEl = document.getElementById("btn" + id);
     if (buttonEl) {
         buttonEl.removeAttribute("disabled");
@@ -96,9 +97,9 @@ function saveChanges(id) {
     var codeEl = document.querySelector("#course" + id + " p:nth-child(2)");
     var progEl = document.querySelector("#course" + id + " p:nth-child(3)");
     if (nameEl && codeEl && progEl) {
-        var name_2 = nameEl.innerHTML;
-        var code_1 = codeEl.innerHTML;
-        var progression = progEl.innerHTML;
+        var name_2 = nameEl.textContent || '';
+        var code_1 = codeEl.textContent || '';
+        var progression = progEl.textContent || '';
         // sparar endast om progressionen uppfyller kraven
         if (!isValidProgression(progression)) {
             alert("Ogiltig progression. Progressionen måste vara 'A', 'B', eller 'C'.");
