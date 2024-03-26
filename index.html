@@ -5,17 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DT208G, laboration 1</title>
 
-    <script src="script.ts" defer></script>
+    <script src="script.js" defer></script>
     <link rel="stylesheet" href="style.scss">
 </head>
 <body>
     <h1>DT208G, laboration 1</h1>
-    <label for="coursename">Lägg till kurs:</label>
-    <input type="text" id="coursename" placeholder="..." required>
-
-    <label for ="coursecode">Kurskod:</label>
-    <input type="text" id="coursecode" placeholder="..." required>
-
+    <h2>Lägg till kurs:</h2>
+    <div class = input-fields>
+    <label for="coursename">Kursnamn:</label>
+    <input type="text" id="coursename" placeholder="" required>
+    </div>
+    <div class = "input-fields">
+    <label for ="coursecode">Kurskod:</label> 
+    <input type="text" id="coursecode" placeholder="" required>
+    </div>
+    <div class = "input-fields">
     <label for ="progression">Progression:</label>
     <select id ="progression" required>
         <option value = "A">A</option>
@@ -23,9 +27,10 @@
         <option value="C">C</option>
     </select>
 
+    </div>
+
     <button id="addBtn">Lägg till</button>
     <div class = "courses">
-
     </div>
 </body>
 </html>

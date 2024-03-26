@@ -1,11 +1,19 @@
+// en interface
+interface Course {
+  id: number;
+  name: string;
+  code: string;
+  progression: string;
+}
+
 // lite variabler
 let courseKey: string = "courses";
-let courses: any[] = [];
+let courses: Course[] = [];
 const coursesData: string | null = localStorage.getItem(courseKey);
 if (coursesData) {
     courses = JSON.parse(coursesData);
 }
-let addBtnEl: HTMLElement | null = document.getElementById("addBtn");
+let addBtnEl: HTMLElement | null = document.getElementById("addBtn") as HTMLButtonElement;
 let nameEl: HTMLInputElement | null = document.getElementById("coursename") as HTMLInputElement;
 let codeEl: HTMLInputElement | null = document.getElementById("coursecode") as HTMLInputElement;
 let progEl: HTMLSelectElement | null = document.getElementById("progression") as HTMLSelectElement;
@@ -22,7 +30,8 @@ if (addBtnEl) {
               addCourse(name, code, progression);
           } else {
             // det går ej lägga till en kurs om inte alla fält är ifyllda
-              console.error("Fyll i alla fält");
+            alert("Vänligen fyll i alla fält.")
+            console.error("Fyll i alla fält");
           }
       }
   });
@@ -30,19 +39,19 @@ if (addBtnEl) {
 
 // laddar in kurserna som sparats genom localStorage
 window.onload = loadCourses;
+
 function loadCourses(): void {
   let coursesData: string | null = localStorage.getItem(courseKey);
   if (coursesData) { 
-    let courses: any[] = JSON.parse(coursesData);
+    let courses: Course[] = JSON.parse(coursesData);
     displayCourses(courses);
   }
 }
 
 
-function displayCourses(data: any[]): void {
+function displayCourses(data: Course[]): void {
   if (courseList) {
     courseList.innerHTML = "";
-    console.table(data);
     for (let i = 0; i < data.length; i++) {
       courseList.innerHTML += `
       <div id="course${data[i].id}">
@@ -50,10 +59,19 @@ function displayCourses(data: any[]): void {
           <p contenteditable="true" oninput="toggleButton(${data[i].id}, 'code')">${data[i]['code']}</p>
           <p contenteditable="true" oninput="toggleButton(${data[i].id}, 'progression')">${data[i]['progression']}</p>
           <p><a href="${data[i]['syllabus']}" target="_blank">Låtsaskursplan</a></p> 
-          <button onclick="deleteCourse(${data[i].id})">Radera</button>
+          <button class="deleteBtn" data-id="${data[i].id}">Radera</button>
           <button id="btn${data[i].id}" onclick="saveChanges(${data[i].id})" disabled>Spara</button>
       </div>`;
     }
+    let deleteButtons = document.querySelectorAll('.deleteBtn');
+    deleteButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const courseId = button.getAttribute('data-id');
+        if (courseId) {
+          deleteCourse(parseInt(courseId));
+        }
+      });
+    });
   }
 }
 
@@ -62,15 +80,24 @@ function addCourse(name: string, code: string, progression: string): void {
   const fakeSyllabusUrl: string = "https://example.com/syllabus";
 
   const coursesData: string | null = localStorage.getItem(courseKey);
-  let courses: any[] = [];
+  let courses: Course[] = [];
   if (coursesData) {
       courses = JSON.parse(coursesData);
   }
-  const existingCourse = courses.find(course => course.code === code);
-  if (existingCourse) {
-      alert("Kurskoden är redan sparad. Använd en annan kurskod.");
-      return; // LÄGG EJ TILL EN KURSKOD SOM REDAN EXISTERAR
+  // LÄGG EJ TILL EN KURSKOD SOM REDAN EXISTERAR
+  let codeExists = false;
+  for (let i = 0; i < courses.length; i++) {
+      if (courses[i].code === code) {
+          codeExists = true;
+          break;
+      }
   }
+
+  if (codeExists) {
+      alert("Kurskoden är redan sparad. Använd en annan kurskod.");
+      return; 
+  }
+  
   const id: number = courses.length > 0 ? courses[courses.length - 1].id + 1 : 1;
   const newCourse = { id, name, code, progression, syllabus: fakeSyllabusUrl };
   courses.push(newCourse);
@@ -103,21 +130,28 @@ function saveChanges(id: number): void {
       // sparar endast om progressionen uppfyller kraven
       if (!isValidProgression(progression)) {
         alert("Ogiltig progression. Progressionen måste vara 'A', 'B', eller 'C'.");
+        window.location.reload();
         return;
     }
 
-      const coursesData: string | null = localStorage.getItem(courseKey);
-      if (coursesData) {
-          const courses: any[] = JSON.parse(coursesData);
-          const index: number = courses.findIndex(course => course.id === id);
-          if (index !== -1) {
-              courses[index].name = name;
-              courses[index].code = code;
-              courses[index].progression = progression;
-              localStorage.setItem(courseKey, JSON.stringify(courses));
-              loadCourses();
-          }
-      }
+    const coursesData: string | null = localStorage.getItem(courseKey);
+    if (coursesData) {
+        const courses: Course[] = JSON.parse(coursesData);
+        let index: number = -1;
+        for (let i = 0; i < courses.length; i++) {
+            if (courses[i].id === id) {
+                index = i;
+                break;
+            }
+        }
+        if (index !== -1) {
+            courses[index].name = name;
+            courses[index].code = code;
+            courses[index].progression = progression;
+            localStorage.setItem(courseKey, JSON.stringify(courses));
+            loadCourses();
+        }
+    }
   }
 }
 
@@ -127,7 +161,7 @@ function deleteCourse(id: number): void {
   if (confirmDelete) {
       let coursesData: string | null = localStorage.getItem(courseKey);
       if (coursesData) {
-          let courses: any[] = JSON.parse(coursesData);
+          let courses: Course[] = JSON.parse(coursesData);
           courses = courses.filter(course => course.id !== id);
           localStorage.setItem(courseKey, JSON.stringify(courses));
           loadCourses();
