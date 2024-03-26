@@ -111,12 +111,18 @@ function isValidProgression(progression: string): boolean {
 }
 
 // knappen för att spara
-function toggleButton(id: number): void {
+declare global {
+  interface Window {
+    toggleButton: (id: number, fieldName: string) => void;
+  }
+}
+
+window.toggleButton = function(id: number, fieldName: string): void {
   const buttonEl: HTMLButtonElement | null = document.getElementById("btn" + id) as HTMLButtonElement;
   if (buttonEl) {
       buttonEl.removeAttribute("disabled");
   }
-}
+};
 
 function saveChanges(event: Event, id: number): void {
   event.preventDefault();
