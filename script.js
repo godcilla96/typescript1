@@ -85,6 +85,7 @@ function addCourse(name, code, progression) {
 function isValidProgression(progression) {
     return progression === "A" || progression === "B" || progression === "C";
 }
+// knappen för att spara
 window.toggleButton = function (id, fieldName) {
     var buttonEl = document.getElementById("btn" + id);
     if (buttonEl) {
